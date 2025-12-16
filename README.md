@@ -27,7 +27,7 @@ project_root/
 ├── requirements.txt        # 依赖库列表
 └── README.md               # 项目说明文档
 
-##环境依赖
+##  🛠️ 环境依赖
 pip install -r requirements.txt
 主要依赖库包括：
 
@@ -39,7 +39,7 @@ scikit-learn (用于聚类评估指标计算)
 
 h5py (用于加载部分 .mat 数据格式)
 
-##运行方式
+## ▶️ 运行方式
 ##直接运行 main.py 即可开始实验：
 
 
