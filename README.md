@@ -1,4 +1,4 @@
-# Spectral Fitting with Wavelet Filter Substitution for Multi-View Clustering
+# Multi-Scale Spatial-Spectral Filtering for Robust Multi-View Clustering
 
 本项目实现了一种基于频谱拟合（Spectral Fitting）和小波滤波器替换（Wavelet Filter Substitution）的多视图聚类算法。
 
