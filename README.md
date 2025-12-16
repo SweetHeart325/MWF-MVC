@@ -8,7 +8,7 @@
 
 ## 📂 项目结构
 
-建议的项目文件结构如下：
+项目文件结构如下：
 
 ```text
 project_root/
@@ -25,22 +25,19 @@ project_root/
 ├── main.py                 # 程序入口与配置
 │
 ├── requirements.txt        # 依赖库列表
-└── README.md               # 项目说明文档
+└── README.md               # 项目说明文
+```
+
 ## 🛠️ 环境依赖
 
+请运行以下命令安装所需的依赖库：
+
+```bash
 pip install -r requirements.txt
-主要依赖库包括：
+```
 
-PyTorch (用于深度学习模型构建)
-
-NumPy & SciPy (用于矩阵运算和稀疏矩阵处理)
-
-scikit-learn (用于聚类评估指标计算)
-
-h5py (用于加载部分 .mat 数据格式)
 ## ▶️ 运行方式
 
-##直接运行 main.py 即可开始实验：
-
-
+```bash
 python main.py
+```
