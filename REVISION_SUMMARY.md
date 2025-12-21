@@ -1,6 +1,6 @@
 # Revision Summary & Implementation Details
 
-**Note to Reviewers:** This document serves as a supplementary guide to the revisions made during the rebuttal phase for **ICASSP 2026**. It provides the formalized nomenclature table, detailed implementation settings for ablation studies, and clarified physical interpretations of the core equations.
+**Note to Reviewers:** This document serves as a supplementary guide to the revisions made during the response phase for **ICASSP 2026**. It provides the formalized nomenclature table, detailed implementation settings for ablation studies, and clarified physical interpretations of the core equations.
 
 ---
 
@@ -83,3 +83,60 @@ $$\mathcal{L}_{total} = \mathcal{L}_{rec} + \alpha \mathcal{L}_{tr} + \beta \mat
 ### Handwritten：
 
 ![image-20251217223213878](D:\typora_image\image-20251217223213878.png)
+
+
+
+
+
+## 6. Detailed Algorithm (Pseudocode) (Address R3-4CDA)
+
+To clarify the exact implementation logic distinguishing spatial and spectral optimization paths, we provide the detailed pseudocode of our **Multi-scale Spatial-Spectral Filtering Framework**.
+
+---
+
+### **Algorithm: Multi-scale Spatial-Spectral Filtering Framework**
+
+**Input:** Multi-view dataset $\mathcal{X}$, initial neighbors $k_{int}$, step size $\Delta k$, max neighbors $k_{max}$.  
+**Output:** Cluster partitions $\boldsymbol{Y}$.
+
+**Stage 1: Frequency Fitting (Spectral Initialization)**
+
+* Initialize neighbor count $k_t \leftarrow k_{int}$.
+* **Phase 1.1: Pre-training (Dynamic Structure)**
+    * **While** $k_t \le k_{max}$ **do**:
+        * Iteratively update graphs $\mathcal{G}^{(v)}$ (compute $\boldsymbol{W}^{(v)}$ via Euclidean distance difference) and eigen-pairs $(\Lambda^{(v)}, \boldsymbol{U}^{(v)})$.
+        * **For** $iter = 1$ to $T_{pre}$ **do**:
+            * Train GAE to minimize $\mathcal{L}_{rec} + \mathcal{L}_{tr}$ (using fixed target filter).
+            * Train Wavelet $\theta$ to minimize $\mathcal{L}_{sp}$ (fitting low-pass prior).
+        * **End For**
+        * $k_t \leftarrow \min(k_t + \Delta k, k_{max})$.
+    * **End While**
+* **Phase 1.2: Fine-tuning (Consistency Alignment)**
+    * **For** $epoch = 1$ to $T_{fine}$ **do**:
+        * Add consistency loss $\mathcal{L}_{con}$ and update GAE and Wavelet separately.
+    * **End For**
+
+**Stage 2: Joint Spatial-Spectral Optimization**
+* **Substitute** target filter with learned wavelet filter $\boldsymbol{P}_{\theta}$.
+* Reset neighbors $k_t \leftarrow k_{int}$.
+* **Phase 2.1: Joint Pre-training (Dynamic Structure)**
+    * **While** $k_t \le k_{max}$ **do**:
+        * Iteratively update graphs $\mathcal{G}^{(v)}$ and eigen-pairs $(\Lambda^{(v)}, \boldsymbol{U}^{(v)})$.
+        * **For** $iter = 1$ to $T_{pre}$ **do**:
+            * Construct dynamic filter $\boldsymbol{P}_{\theta}^{(v)}$ and forward GAE.
+            * Update **all** parameters minimizing $\mathcal{L}_{rec} + \mathcal{L}_{tr} + \beta\mathcal{L}_{sp}$.
+        * **End For**
+        * $k_t \leftarrow \min(k_t + \Delta k, k_{max})$.
+    * **End While**
+* **Phase 2.2: Joint Fine-tuning (Consistency Alignment)**
+    * **For** $epoch = 1$ to $T_{fine}$ **do**:
+        * Construct dynamic filter $\boldsymbol{P}_{\theta}^{(v)}$ and forward GAE.
+        * Update **all** parameters minimizing $\mathcal{L}_{rec} + \mathcal{L}_{tr} + \mathcal{L}_{con} + \beta\mathcal{L}_{sp}$.
+    * **End For**
+
+**Inference (Consensus Fusion)**
+
+* Compute consensus filter: $\overline{\boldsymbol{P}} \leftarrow \frac{1}{V}\sum_{v=1}^{V} \boldsymbol{P}_{\theta}^{(v)}$.
+* Unified representation: $\boldsymbol{H} \leftarrow \overline{\boldsymbol{P}} \cdot \text{Concat}(\boldsymbol{Z}^{(1)}, \dots, \boldsymbol{Z}^{(V)})$.
+* Obtain $\boldsymbol{Y}$ by performing $k$-means on $\boldsymbol{H}$.
+* **Return** $\boldsymbol{Y}$
