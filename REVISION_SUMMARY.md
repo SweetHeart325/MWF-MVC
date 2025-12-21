@@ -10,7 +10,7 @@ To ensure rigor within the Graph Signal Processing (GSP) framework, we explicitl
 
 | Symbol                    | Definition                     | Physical Meaning                                             |
 | :------------------------ | :----------------------------- | :----------------------------------------------------------- |
-| $X$                       | Multi-view Dataset             | Collection of $V$ views $\{X^{(v)}\}_{v=1}^V$.               |
+| $\mathcal{X}$             | Multi-view Dataset             | Collection of $V$ views $\{X^{(v)}\}_{v=1}^V$.               |
 | $\mathcal{G}^{(v)}_t$     | Dynamic Graph                  | Graph topology at epoch $t$, determined by neighbor size $k_t$. |
 | **$k_t$**                 | **Time-varying Neighbor Size** | The dynamic scale parameter controlling the neighborhood expansion curriculum. |
 | $L_{sym}^{(v)}$           | Normalized Laplacian           | Structural operator encoding the manifold topology.          |
@@ -33,6 +33,7 @@ We clarify the rigorous implementation details for the ablation variants discuss
 * **Parameter Selection (Grid Search):** To ensure a fair comparison, we did not choose the neighbor size $k$ arbitrarily. We performed a **comprehensive grid search** to find the *optimal static setting* for each dataset.
 * **Optimal Static Baseline Settings:**
   * **100leaves:** Optimal static $k = \mathbf{16}$.
+  * **Fashion:** Optimal static $k = \mathbf{1000}$.
   * **Handwritten:** Optimal static $k = \mathbf{51}$.
 * **Result:** Even compared against these optimally tuned static baselines, our dynamic method achieves a performance gain of **+4.24%**, validating the necessity of capturing hierarchical structural dependencies.
 
@@ -74,25 +75,21 @@ $$\mathcal{L}_{total} = \mathcal{L}_{rec} + \alpha \mathcal{L}_{tr} + \beta \mat
   * *Example:* **ICMVC [27]** replaced **ICMVC (AAAI’24)**.
 * **Comparisons:** We have verified the correspondence of all baseline methods (e.g., DUA-Nets, CoMSC, SDSNE) to their respective citations in the references list.
 
+---
+
 ## 5. Modified Figure 1
 
-### Fashion：
-
+### Fashion Dataset:
 ![Fashion dataset](./figures/Fashion_dataset.png)
 
-### Handwritten：
-
+### Handwritten Dataset:
 ![Handwritten dataset](figures/Handwritten_dataset.png)
 
-
-
-
+---
 
 ## 6. Detailed Algorithm (Pseudocode) (Address R3-4CDA)
 
 To clarify the exact implementation logic distinguishing spatial and spectral optimization paths, we provide the detailed pseudocode of our **Multi-scale Spatial-Spectral Filtering Framework**.
-
----
 
 ### **Algorithm: Multi-scale Spatial-Spectral Filtering Framework**
 
@@ -139,7 +136,16 @@ To clarify the exact implementation logic distinguishing spatial and spectral op
 * Compute consensus filter: $\overline{\boldsymbol{P}} \leftarrow \frac{1}{V}\sum_{v=1}^{V} \boldsymbol{P}_{\theta}^{(v)}$.
 * Unified representation: $\boldsymbol{H} \leftarrow \overline{\boldsymbol{P}} \cdot \text{Concat}(\boldsymbol{Z}^{(1)}, \dots, \boldsymbol{Z}^{(V)})$.
 * Obtain $\boldsymbol{Y}$ by performing $k$-means on $\boldsymbol{H}$.
-
 * **Return** $\boldsymbol{Y}$
 
+---
 
+## 7. Revised Section 3.3 Text (Address R1-5C74 & R2-3954)
+
+To resolve the concerns regarding the specific contributions of each module, we have rewritten **Section 3.3 (Ablation Studies)** in the revised manuscript. Below is the updated content:
+
+**Revised Content of Section 3.3:**
+
+> **Impact of Multiscale Construction (w/o Multi.):** Removing dynamic expansion ($k_t$) degenerates the model into a **fixed single-scale graph**. Even with optimal static neighborhood sizes found via grid search (**$k=16$** for 100leaves; **$k=1000$** for Fashion; **$k=51$** for Handwritten), we observe a performance drop of up to **4.24%**. This validates that static topologies fail to capture the hierarchical structural dependencies that our progressive strategy effectively encodes.
+>
+> **Impact of Spectral Filtering (w/o Freq.):** Omitting adaptive fitting degenerates the spectral processing into a **fixed ideal low-pass filter** (approximating $1-\lambda$). The sharp **3.88%** accuracy decline confirms that rigid filtering is insufficient, as it oversmooths data and suppresses discriminative mid-frequency patterns (e.g., textures) crucial for separation. Thus, both designs are indispensable for robust representation learning.
