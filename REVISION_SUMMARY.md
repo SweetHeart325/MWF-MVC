@@ -78,11 +78,11 @@ $$\mathcal{L}_{total} = \mathcal{L}_{rec} + \alpha \mathcal{L}_{tr} + \beta \mat
 
 ### Fashion：
 
-![image-20251217223045619](D:\typora_image\image-20251217223045619.png)
+![Fashion dataset](./figures/Fashion dataset.png)
 
 ### Handwritten：
 
-![image-20251217223213878](D:\typora_image\image-20251217223213878.png)
+![Handwritten dataset](./figures/Handwritten dataset.png)
 
 
 
@@ -139,4 +139,5 @@ To clarify the exact implementation logic distinguishing spatial and spectral op
 * Compute consensus filter: $\overline{\boldsymbol{P}} \leftarrow \frac{1}{V}\sum_{v=1}^{V} \boldsymbol{P}_{\theta}^{(v)}$.
 * Unified representation: $\boldsymbol{H} \leftarrow \overline{\boldsymbol{P}} \cdot \text{Concat}(\boldsymbol{Z}^{(1)}, \dots, \boldsymbol{Z}^{(V)})$.
 * Obtain $\boldsymbol{Y}$ by performing $k$-means on $\boldsymbol{H}$.
+
 * **Return** $\boldsymbol{Y}$
