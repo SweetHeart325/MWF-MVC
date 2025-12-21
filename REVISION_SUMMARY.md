@@ -78,7 +78,7 @@ $$\mathcal{L}_{total} = \mathcal{L}_{rec} + \alpha \mathcal{L}_{tr} + \beta \mat
 
 ### Fashion：
 
-![Fashion dataset](./figures/Handwritten_dataset.png)
+![Fashion dataset](./figures/Fashion_dataset.png)
 
 ### Handwritten：
 
@@ -141,4 +141,5 @@ To clarify the exact implementation logic distinguishing spatial and spectral op
 * Obtain $\boldsymbol{Y}$ by performing $k$-means on $\boldsymbol{H}$.
 
 * **Return** $\boldsymbol{Y}$
+
 
