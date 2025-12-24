@@ -33,7 +33,7 @@ We clarify the rigorous implementation details for the ablation variants discuss
 * **Parameter Selection (Grid Search):** To ensure a fair comparison, we did not choose the neighbor size $k$ arbitrarily. We performed a **comprehensive grid search** to find the *optimal static setting* for each dataset.
 * **Optimal Static Baseline Settings:**
   * **100leaves:** Optimal static $k = \mathbf{16}$.
-  * **Fashion:** Optimal static $k = \mathbf{1000}$.
+  * **Fashion:** Optimal static $k = \mathbf{51}$.
   * **Handwritten:** Optimal static $k = \mathbf{51}$.
 * **Result:** Even compared against these optimally tuned static baselines, our dynamic method achieves a performance gain of **+4.24%**, validating the necessity of capturing hierarchical structural dependencies.
 
@@ -148,4 +148,5 @@ To resolve the concerns regarding the specific contributions of each module, we 
 
 > **Impact of Multiscale Construction (w/o Multi.):** Removing dynamic expansion ($k_t$) degenerates the model into a **fixed single-scale graph**. Even with optimal static neighborhood sizes found via grid search (**$k=16$** for 100leaves; **$k=1000$** for Fashion; **$k=51$** for Handwritten), we observe a performance drop of up to **4.24%**. This validates that static topologies fail to capture the hierarchical structural dependencies that our progressive strategy effectively encodes.
 >
+
 > **Impact of Spectral Filtering (w/o Freq.):** Omitting adaptive fitting degenerates the spectral processing into a **fixed ideal low-pass filter** (approximating $1-\lambda$). The sharp **3.88%** accuracy decline confirms that rigid filtering is insufficient, as it oversmooths data and suppresses discriminative mid-frequency patterns (e.g., textures) crucial for separation. Thus, both designs are indispensable for robust representation learning.
